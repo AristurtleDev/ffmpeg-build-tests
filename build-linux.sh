@@ -58,12 +58,17 @@ ldd_output=$(ldd ffmpeg)
 
 # Loop through each line of ldd output
 while IFS= read -r line; do
-    # Extract the library name from each line
-    lib_name=$(echo "$line" | awk '{print $1}')
+    # Extract the library path from each line
+    lib_path=$(echo "$line" | awk '{print $(NF-1)}')
 
-    # Copy the library to the artifacts-linux directory
-    cp --parents "$lib_name" .
+    # Check if the library path is within /lib, /lib64, or /usr/lib
+    if [[ $lib_path =~ ^(/lib|/lib64|/usr/lib) ]]; then
+        # Extract the library name
+        lib_name=$(echo "$line" | awk '{print $1}')
 
+        # Copy the library to the artifacts-linux directory
+        cp --parents "$lib_name" .
+    fi
 done <<< "$ldd_output"
 
 echo "ffmpeg binary dependencies copied to artifacts-linux directory."
