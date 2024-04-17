@@ -40,7 +40,7 @@ sudo apt-get install -y build-essential pkg-config yasm git
 sudo apt-get install -y libx264-dev libx265-dev libvorbis-dev libmp3lame-dev lame
 
 # Clone the ffmpeg repository
-git clone https://github.com/FFmpeg/FFmpeg.git ffmpeg
+git clone --depth 1 --branch n7.0 https://github.com/ffmpeg/ffmpeg.git
 
 cd ffmpeg
 ./configure $SHARED_CONFIG
@@ -51,6 +51,7 @@ mkdir artifacts-linux
 cp ./ffmpeg/ffmpeg ./artifacts-linux
 
 # Execute ldd on the ffmpeg binary and extract only the first part of each line
+cd ./artifacts-linux
 ldd_output=$(ldd ffmpeg | awk '{print $1}')
 
 # Check if any of the lines in the ldd output fail the check
