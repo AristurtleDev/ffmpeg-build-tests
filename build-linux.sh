@@ -50,16 +50,20 @@ cd "$ROOT_DIR"
 mkdir artifacts-linux
 cp ./ffmpeg/ffmpeg ./artifacts-linux
 
-# Execute ldd on the ffmpeg binary and extract only the first part of each line
+# Move to artifacts-linux directory
 cd ./artifacts-linux
-ldd_output=$(ldd ffmpeg | awk '{print $1}')
 
-echo "$ldd_output"
+# Execute ldd on the ffmpeg binary and extract the library dependencies
+ldd_output=$(ldd ffmpeg)
 
-# Check if any of the lines in the ldd output fail the check
-if grep -qEv 'linux-vdso.so|libstdc++.so|libgcc_s.so|libc.so|libm.so|libdl.so|libpthread.so|/lib/ld-linux-|/lib64/ld-linux-' <<< "$ldd_output"; then
-    echo "Error: ffmpeg binary dependencies check failed."
-    exit 1
-fi
+# Loop through each line of ldd output
+while IFS= read -r line; do
+    # Extract the library name from each line
+    lib_name=$(echo "$line" | awk '{print $1}')
 
-echo "ffmpeg binary dependencies check passed."
+    # Copy the library to the artifacts-linux directory
+    cp --parents "$lib_name" .
+
+done <<< "$ldd_output"
+
+echo "ffmpeg binary dependencies copied to artifacts-linux directory."
