@@ -46,7 +46,7 @@ cd ffmpeg
 ./configure $SHARED_CONFIG
 make -j$(nproc)
 
-cd "$ROOT_DIRECTORY"
+cd "$ROOT_DIR"
 mkdir artifacts-linux
 cp ./ffmpeg/ffmpeg ./artifacts-linux
 
