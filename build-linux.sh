@@ -54,6 +54,8 @@ cp ./ffmpeg/ffmpeg ./artifacts-linux
 cd ./artifacts-linux
 ldd_output=$(ldd ffmpeg | awk '{print $1}')
 
+echo "$ldd_output"
+
 # Check if any of the lines in the ldd output fail the check
 if grep -qEv 'linux-vdso.so|libstdc++.so|libgcc_s.so|libc.so|libm.so|libdl.so|libpthread.so|/lib/ld-linux-|/lib64/ld-linux-' <<< "$ldd_output"; then
     echo "Error: ffmpeg binary dependencies check failed."
