@@ -66,7 +66,9 @@ cd "$FFMPEG_DIR"
             --enable-muxer=asf \
             --enable-muxer=ipod \
             --enable-muxer=ogg \
-            --enable-muxer=mp3
+            --enable-muxer=mp3 \
+            --extra-cflags="-I$ARTIFACTS_DIR/include" \
+            --extra-ldflags="-L$ARTIFACTS_DIR/lib"
 make
 make install
 
